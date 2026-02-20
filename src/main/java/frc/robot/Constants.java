@@ -2,6 +2,8 @@ package frc.robot;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+
+//import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 
@@ -113,6 +115,9 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
         public static final int DRIVING_MOTOR_CURRENT_LIMIT = 40; //amps
         public static final int TURNING_MOTOR_CURRENT_LIMIT = 20; //amps
 
+        
+
+
 
 
 
@@ -132,6 +137,14 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
     public static class kEncoders {
         public static final int ENCODER_RESOLUTION = 4096; //Set to 4096 because ThriftyBot Absolute Magnetic Encoder features 12-bit resolution
+        public static final int FL_ENCODER = 1;
+        public static final int FR_ENCODER = 2;
+        public static final int BL_ENCODER = 3;
+        public static final int BR_ENCODER = 4;
+        public static final double FL_ENCODER_OFFSET = 0.0;
+        public static final double FR_ENCODER_OFFSET = 0.0;
+        public static final double BL_ENCODER_OFFSET = 0.0;
+        public static final double BR_ENCODER_OFFSET = 0.0;
 
     }
  }

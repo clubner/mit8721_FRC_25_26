@@ -8,11 +8,17 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.kCan;
+import frc.robot.Constants.kControls;
+import frc.robot.Constants.kEncoders;
+import frc.robot.Constants.kSwerve;
+
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 
 /** Represents a swerve drive style drivetrain. */
-public class Drivetrain {
+public class Drivetrain extends SubsystemBase {
   
   public static final double kMaxSpeed = 3.0; // 3 meters per second
   public static final double kMaxAngularSpeed = Math.PI; // 1/2 rotation per second
@@ -22,13 +28,13 @@ public class Drivetrain {
   //private final Translation2d m_backLeftLocation = new Translation2d(-0.381, 0.381);
   //private final Translation2d m_backRightLocation = new Translation2d(-0.381, -0.381);
 
-  private final SwerveModule m_frontLeft = new SwerveModule(1, 2, 0, 1, 2, 3);
-  private final SwerveModule m_frontRight = new SwerveModule(3, 4, 4, 5, 6, 7);
-  private final SwerveModule m_backLeft = new SwerveModule(5, 6, 8, 9, 10, 11);
-  private final SwerveModule m_backRight = new SwerveModule(7, 8, 12, 13, 14, 15);
+  private final SwerveModule frontLeftModule = new SwerveModule(kCan.FLD_MOTOR, kCan.FLT_MOTOR, kEncoders.FL_ENCODER, kEncoders.FL_ENCODER_OFFSET);
+  private final SwerveModule frontRightModule = new SwerveModule(kCan.FRD_MOTOR, kCan.FRT_MOTOR, kEncoders.FR_ENCODER, kEncoders.FR_ENCODER_OFFSET);
+  private final SwerveModule backLeftModule = new SwerveModule(kCan.BLD_MOTOR, kCan.BLT_MOTOR, kEncoders.BL_ENCODER, kEncoders.BL_ENCODER_OFFSET);
+  private final SwerveModule backRightModule = new SwerveModule(kCan.BRD_MOTOR, kCan.BRT_MOTOR, kEncoders.BR_ENCODER, kEncoders.BR_ENCODER_OFFSET);
 
   //Will need to update
-  private final Pigeon2 pidgeotto = new Pigeon2(0);
+  private final Pigeon2 pidgeotto = new Pigeon2(kCan.PIDGEOTTO);
   //Already did this in Constants file
   //private final SwerveDriveKinematics m_kinematics =
       //new SwerveDriveKinematics(
