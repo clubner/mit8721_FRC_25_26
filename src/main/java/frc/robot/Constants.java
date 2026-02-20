@@ -2,6 +2,7 @@ package frc.robot;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 
 
@@ -103,6 +104,16 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
         public static final double TURNING_FF = 0;
         public static final double TURNING_MIN_OUTPUT_NORMALIZED = -1;
         public static final double TURNING_MAX_OUTPUT_NORMALIZED = 1;
+
+        //Idle modes
+        public static final IdleMode DRIVING_MOTOR_IDLE_MODE = IdleMode.kBrake;
+        public static final IdleMode TURNING_MOTOR_IDLE_MODE = IdleMode.kBrake;
+
+        //Current limits
+        public static final int DRIVING_MOTOR_CURRENT_LIMIT = 40; //amps
+        public static final int TURNING_MOTOR_CURRENT_LIMIT = 20; //amps
+
+
 
 
 
