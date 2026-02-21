@@ -70,6 +70,8 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
         //Invert the turning encoder because the output shaft rotates in the
         //opposite dirrection of the steering motor.
         public static final boolean TURNING_ENCODER_INVERTED = true;
+        //Reverse Pigeon gyro if it's inverted
+        public static final boolean PIDGEOTTO_INVERTED = false;
         //Speeds of motors
         public static final double NEO_FREE_SPEED_RPM = 5676;
         //Dividing by 60 to get revs per second
@@ -137,10 +139,10 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
     public static class kEncoders {
         public static final int ENCODER_RESOLUTION = 4096; //Set to 4096 because ThriftyBot Absolute Magnetic Encoder features 12-bit resolution
-        public static final int FL_ENCODER = 1;
-        public static final int FR_ENCODER = 2;
-        public static final int BL_ENCODER = 3;
-        public static final int BR_ENCODER = 4;
+        public static final int FL_ENCODER = 0;
+        public static final int FR_ENCODER = 3;
+        public static final int BL_ENCODER = 1;
+        public static final int BR_ENCODER = 2;
         public static final double FL_ENCODER_OFFSET = 0.0;
         public static final double FR_ENCODER_OFFSET = 0.0;
         public static final double BL_ENCODER_OFFSET = 0.0;
