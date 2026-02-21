@@ -10,9 +10,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kCan;
-import frc.robot.Constants.kControls;
+//import frc.robot.Constants.kControls;
 import frc.robot.Constants.kEncoders;
-import frc.robot.Constants.kSwerve;
+//import frc.robot.Constants.kSwerve;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 
@@ -45,10 +45,10 @@ public class Drivetrain extends SubsystemBase {
           Constants.kSwerve.KINEMATICS,
           pidgeotto.getRotation2d(),
           new SwerveModulePosition[] {
-            m_frontLeft.getPosition(),
-            m_frontRight.getPosition(),
-            m_backLeft.getPosition(),
-            m_backRight.getPosition()
+            frontLeftModule.getPosition(),
+            frontRightModule.getPosition(),
+            backLeftModule.getPosition(),
+            backRightModule.getPosition()
           });
 
   public Drivetrain() {
@@ -74,10 +74,10 @@ public class Drivetrain extends SubsystemBase {
                     : new ChassisSpeeds(xSpeed, ySpeed, rot),
                 periodSeconds));
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
-    m_frontLeft.setDesiredState(swerveModuleStates[0]);
-    m_frontRight.setDesiredState(swerveModuleStates[1]);
-    m_backLeft.setDesiredState(swerveModuleStates[2]);
-    m_backRight.setDesiredState(swerveModuleStates[3]);
+    frontLeftModule.setDesiredState(swerveModuleStates[0]);
+    frontRightModule.setDesiredState(swerveModuleStates[1]);
+    backLeftModule.setDesiredState(swerveModuleStates[2]);
+    backRightModule.setDesiredState(swerveModuleStates[3]);
   }
 
   /** Updates the field relative position of the robot. */
@@ -85,10 +85,10 @@ public class Drivetrain extends SubsystemBase {
     m_odometry.update(
         pidgeotto.getRotation2d(),
         new SwerveModulePosition[] {
-          m_frontLeft.getPosition(),
-          m_frontRight.getPosition(),
-          m_backLeft.getPosition(),
-          m_backRight.getPosition()
+          frontLeftModule.getPosition(),
+          frontRightModule.getPosition(),
+          backLeftModule.getPosition(),
+          backRightModule.getPosition()
         });
   }
 }
