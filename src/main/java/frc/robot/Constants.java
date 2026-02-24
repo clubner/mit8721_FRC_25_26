@@ -43,7 +43,11 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
     //Joystick, controller, axis IDs
     //The "k" in front of "Controls" is a programming convention used to indicate a constant.
     public static class kControls {
-        //Placeholders
+        //Ports
+        public static final int PRIMARY_PORT = 0;
+        public static final int SECONDARY_PORT = 1; //possibly unnecessary
+        public static final double DRIVE_DEADBAND = .05;
+        //Placeholders for buttons
         public static final int RIGHT_JOYSTICK = 1;
         public static final int LEFT_JOYSTICK = 2;
         public static final int COPILOT_GAMEPAD = 3;
