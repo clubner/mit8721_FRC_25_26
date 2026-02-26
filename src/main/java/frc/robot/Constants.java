@@ -1,7 +1,17 @@
 package frc.robot;
+
+import static edu.wpi.first.apriltag.AprilTagFields.kDefaultField;
+import static edu.wpi.first.units.Units.Inches;
+
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.units.measure.Distance;
+import java.io.IOException;
+import java.util.HashMap;
+import edu.wpi.first.wpilibj.RobotBase;
 
 //import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -151,6 +161,144 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
         public static final double FR_ENCODER_OFFSET = 0.0;
         public static final double BL_ENCODER_OFFSET = 0.0;
         public static final double BR_ENCODER_OFFSET = 0.0;
+
+    }
+
+    public static class kVision {
+
+    }
+
+    public static class kField {
+        //Distance of field in inches
+        public static final Distance FIELD_LENGTH = Inches.of(651.2225);
+        public static final Distance FIELD_WIDTH = Inches.of(317.6875);
+        //Measurements of center bump
+        public static final Distance BUMP_WIDTH = Inches.of(73.08122);
+        public static final Distance BUMP_DEPTH = Inches.of(47);
+        public static final Distance BUMP_TO_WALL = Inches.of(62.37375);
+        public static final Distance BUMP_TO_DRIVER_STATION = Inches.of(182.11125);
+        //Measurement of trench width
+        public static final Distance TRENCH_WIDTH = Inches.of(50.34375);
+        //Measurement from center of bumper/trench to field center
+        public static final Distance BUMP_CENTER_Y_TO_FIELD_CENTER = 
+            FIELD_WIDTH.div(2).minus(BUMP_TO_WALL).plus(BUMP_WIDTH.div(2));
+        public static final Distance TRENCH_CENTER_Y_TO_FIELD_CENTER = 
+            FIELD_WIDTH.div(2).minus(TRENCH_WIDTH.div(2));
+        //Starting line distance
+        public static final Distance STARTING_LINE_DISTANCE = Inches.of(158.6);
+        //Hub centers
+        public static final Translation2d HUB_CENTER_BLUE = 
+            new Translation2d(Inches.of(182.11125), FIELD_WIDTH.div(2));
+        public static final Translation2d HUB_CENTER_RED = 
+            new Translation2d(Inches.of(469.11125), FIELD_WIDTH.div(2));
+        //Depot measurements
+        public static final Distance DEPOT_WIDTH = Inches.of(42);
+        public static final Distance DEPOT_LENGTH = Inches.of(24);
+        public static final Distance DEPOT_TO_WALL = Inches.of(213.84375);
+        public static final Distance DEPOT_CENTER_TO_WALL = DEPOT_TO_WALL.plus(DEPOT_WIDTH.div(2));
+        public static final Distance OUTPOST_CENTER_TO_WALL = Inches.of(47.5).div(2);
+        //Robot length
+        public static final Distance ROBOT_LENGTH = Inches.of(kSwerve.DT_LENGTH);
+
+        //April tags - select "simulation"/"real" to decide what mode to function in
+        //private static String fieldMode = "real";
+        public static final AprilTagFieldLayout APRIL_TAGS = AprilTagFieldLayout.loadField(kDefaultField);
+        //public static final AprilTagFieldLayout APRIL_TAGS = (fieldMode.equals("simulation")) 
+            //? AprilTagFieldLayout.loadFromResource(kDefaultField.m_resourceFile) : AprilTagFieldLayout.loadField(kDefaultField);
+        
+
+        //Add a new value and automatically adds it to the auto chooser (I don't really understand this part)
+        public static HashMap<String, Translation2d> AutoConstants() {
+            HashMap<String, Translation2d> points = new HashMap<>();
+            points.put(
+                "Bump REn, ", 
+                new Translation2d(STARTING_LINE_DISTANCE.minus(BUMP_DEPTH.div(2)),
+                    BUMP_WIDTH.div(2).plus(BUMP_TO_WALL)));
+            points.put(
+                "Bump REx, ",
+                new Translation2d(STARTING_LINE_DISTANCE.plus(BUMP_DEPTH).plus(ROBOT_LENGTH.div(2)),
+                    BUMP_WIDTH.div(2).plus(BUMP_TO_WALL)));
+            points.put(
+                "Bump LEn, ",
+                new Translation2d(STARTING_LINE_DISTANCE.minus(BUMP_DEPTH.div(2)),
+                    FIELD_WIDTH.minus(BUMP_WIDTH.div(2).plus(BUMP_TO_WALL))));
+            points.put(
+                "Bump LEx, ",
+                new Translation2d(STARTING_LINE_DISTANCE.plus(BUMP_DEPTH).plus(ROBOT_LENGTH.div(2)),
+                    FIELD_WIDTH.minus(BUMP_WIDTH.div(2).plus(BUMP_TO_WALL))));
+            return points;
+        }
+        //Creating bump enumeration
+        public class Bump {
+            public enum BumpLocation {
+                BLUE_LEFT(
+                    new Translation2d(
+                        BUMP_TO_DRIVER_STATION,
+                        FIELD_WIDTH.div(2).plus(BUMP_CENTER_Y_TO_FIELD_CENTER.minus(BUMP_WIDTH.div(2)))
+                        ),
+                    new Translation2d(
+                        BUMP_TO_DRIVER_STATION,
+                        FIELD_WIDTH.div(2).plus(BUMP_CENTER_Y_TO_FIELD_CENTER.plus(BUMP_WIDTH.div(2)))
+                    )
+                    ),
+                BLUE_RIGHT(
+                    new Translation2d(
+                        BUMP_TO_DRIVER_STATION,
+                        FIELD_WIDTH.div(2).minus(BUMP_CENTER_Y_TO_FIELD_CENTER.minus(BUMP_WIDTH.div(2)))
+                        ),
+                    new Translation2d(
+                        BUMP_TO_DRIVER_STATION,
+                        FIELD_WIDTH.div(2).minus(BUMP_CENTER_Y_TO_FIELD_CENTER.plus(BUMP_WIDTH.div(2)))
+                    )
+                    ),
+                RED_RIGHT(
+                    new Translation2d(
+                        FIELD_LENGTH.minus(BUMP_TO_DRIVER_STATION),
+                        FIELD_WIDTH.div(2).plus(BUMP_CENTER_Y_TO_FIELD_CENTER.minus(BUMP_WIDTH.div(2)))
+                        ),
+                    new Translation2d(
+                        FIELD_LENGTH.minus(BUMP_TO_DRIVER_STATION),
+                        FIELD_WIDTH.div(2).plus(BUMP_CENTER_Y_TO_FIELD_CENTER.plus(BUMP_WIDTH.div(2)))
+                    )
+                    ),
+                RED_LEFT(
+                    new Translation2d(
+                        FIELD_LENGTH.minus(BUMP_TO_DRIVER_STATION),
+                        FIELD_WIDTH.div(2).minus(BUMP_CENTER_Y_TO_FIELD_CENTER.minus(BUMP_WIDTH.div(2)))
+                        ),
+                    new Translation2d(
+                        BUMP_TO_DRIVER_STATION,
+                        FIELD_WIDTH.div(2).minus(BUMP_CENTER_Y_TO_FIELD_CENTER.plus(BUMP_WIDTH.div(2)))
+                    )
+                    );
+            public final Translation2d translationInside;
+            public final Translation2d translationOutisde;
+            public final Translation2d average;
+            //Constructor for bump location enum
+            BumpLocation(Translation2d translationInside, Translation2d translationOutside) {
+                this.translationInside = translationInside;
+                this.translationOutisde = translationOutside;
+                this.average = translationInside.plus(translationOutisde).div(2);
+            }
+            
+            public static BumpLocation getClosest(Translation2d translation) {
+                double closestDistance = Double.MAX_VALUE;
+                BumpLocation closestBumpLocation = BLUE_LEFT;
+
+                for (BumpLocation bumpLocation : BumpLocation.values()) {
+                    double distance = translation.getDistance(bumpLocation.translationInside);
+                    if (distance < closestDistance) {
+                        closestDistance = distance;
+                        closestBumpLocation = bumpLocation;
+                    }
+                }
+                return closestBumpLocation;
+            }
+                
+            }
+        }
+
+
 
     }
  }
