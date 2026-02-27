@@ -12,6 +12,10 @@ import edu.wpi.first.units.measure.Distance;
 import java.io.IOException;
 import java.util.HashMap;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+
 
 //import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -165,6 +169,77 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
     }
 
     public static class kVision {
+        // Starting trust level for X/Y position per AprilTag seen (meters)
+        public static final double BASE_XY_STD_DEV = .5;
+        // Starting trust level for rotation per AprilTag seen (radians)
+        public static final double BASE_THETA_STD_DEV = 5;
+        //============== Ambiguity Filtering ==============
+        /*
+         * Maximum acceptable ambiguity for AprilTag detections (0.0 = perfect, 1.0 = completely ambiguous)
+         */
+        public static final double MAX_TAG_AMBIGUITY = .7;
+
+        //=============== Trust Level Limits ================
+
+        //Most we'll ever trust X/Y measurements - small number, so confident
+        public static final double MIN_XY_STD_DEV = .01;
+        //Least we'll ever trust X/Y measurements - not confident
+        public static final double MAX_XY_STD_DEV = 2.0;
+        //Most we'll trust rotation measurements
+        public static final double MIN_THETA_STD_DEV = .05;
+        //Least we'll trust rotation measurements 
+        public static final double MAX_THETA_STD_DEV = 1;
+
+        /*
+         * Defines a single vision pose camera configuration.
+         * 
+         * @param name: the exact PhotonVision camera name must match NetworkTables name
+         * @param robotToCamera: Transform from robot center to camera lens in meters and radians
+         *    Translation3d: +X forward, +Y left, +Z up. Rotation3d: roll (X), patch (Y), yaw (Z) in radians
+         * 
+         */
+
+        public static record PoseCameraConfig(String name, Transform3d robotToCamera) {}
+
+        public static final PoseCameraConfig[] POSE_CAMERA_CONFIGS = {
+            new PoseCameraConfig(
+                "FrontLeft",
+                new Transform3d(
+                    new Translation3d(
+                        Units.inchesToMeters(7.769),
+                        Units.inchesToMeters(13.341),
+                        Units.inchesToMeters(7.995)),
+                    new Rotation3d(Math.toRadians(180), Math.toRadians(180 + 30), Math.toRadians(175.0)))),
+            new PoseCameraConfig(
+                "FrontRight",
+                new Transform3d(
+                    new Translation3d(
+                        Units.inchesToMeters(7.769),
+                        Units.inchesToMeters(-13.341),
+                        Units.inchesToMeters(7.995)),
+                    new Rotation3d(Math.toRadians(180), Math.toRadians(180 + 30), Math.toRadians(185.0)))),
+            new PoseCameraConfig(
+                "BackLeft",
+                new Transform3d(
+                    new Translation3d(
+                        Units.inchesToMeters(-9.61367),
+                        Units.inchesToMeters(-16.48053),
+                        Units.inchesToMeters(28.975)),
+                    new Rotation3d(Math.toRadians(180), Math.toRadians(180), Math.toRadians(-90.0)))),
+            new PoseCameraConfig(
+                "BackRight",
+                new Transform3d(
+                    new Translation3d(
+                        Units.inchesToMeters(-9.61367),
+                        Units.inchesToMeters(-16.48053),
+                        Units.inchesToMeters(28.975)),
+                    new Rotation3d(Math.toRadians(180), Math.toRadians(180), Math.toRadians(90)))),
+
+            )
+        }
+
+
+
 
     }
 
@@ -208,6 +283,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
         
 
         //Add a new value and automatically adds it to the auto chooser (I don't really understand this part)
+        //I think this has something to do with creating points to map the bumps with - right/left, south/north?
         public static HashMap<String, Translation2d> AutoConstants() {
             HashMap<String, Translation2d> points = new HashMap<>();
             points.put(
